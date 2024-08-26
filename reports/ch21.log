@@ -1,0 +1,283 @@
+Traceback (most recent call last):
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/asyncio/base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
+from time import sleep
+import pandas as pd
+import datefinder
+import calendar
+import os
+import unittest
+from random import randint
+#import PyPDF2
+#import glob
+import time
+import json
+import re
+
+driver_path = 'I:\Projects\AFRI/chromedriver.exe'  #for windows
+# driver_path = '/Users/Yanxu/OneDrive/Projects/AgPolicyCoding/chromedriver'
+# driver = webdriver.Chrome(executable_path=DRIVER_PATH)
+
+# Change the working directory
+#os.chdir('/Users/long/OneDrive/Projects/AFRI')
+os.chdir('I:\Projects/AFRI')
+# os.chdir('/Volumes/GoogleDrive/Shared drives/UCSC-UMN AFRI project/Data/GA')
+# Get the current working directory
+cwd = os.getcwd()
+# Print the current working directory
+print("Current working directory: {0}".format(cwd))
+
+chromeOptions = webdriver.ChromeOptions()
+# for mac
+#dnldpath = {"download.default_directory" : "/Users/long/OneDrive/Projects/AFRI/data/SD/"}
+# for windows
+dnldpath = {"download.default_directory": "I:\Projects/AFRI/data/NY/"}
+chromeOptions.add_experimental_option("prefs", dnldpath)
+chromeOptions.add_argument('--no-sandbox')
+chromeOptions.add_argument('--disable-dev-shm-usage')
+driver = webdriver.Chrome(executable_path=driver_path, options=chromeOptions)
+
+urls = []
+
+driver.get("https://nyassembly.gov/leg/?sh=advanced")
+
+#terms = driver.find_elements_by_css_selector('#term option')
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2021-22')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2019-20')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2017-18')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2015-16')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2013-14')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2011-12')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2009-10')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2007-08')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2005-06')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2003-04')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('2001-02')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+select_session = Select(driver.find_element_by_css_selector('select#term'))
+select_session.select_by_visible_text('1999-00')
+select_type = Select(driver.find_element_by_css_selector('#leg_type'))
+select_type.select_by_visible_text('All Types')
+select_status = Select(driver.find_element_by_css_selector('#bill_status'))
+select_status.select_by_visible_text('Chaptered')
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+driver.find_element_by_css_selector('#search_btn_div > input[type=button]:nth-child(1)').click()
+sleep(1)
+bills = driver.find_elements_by_css_selector('#vcontent_div > ul > li > a')
+for bill in bills:
+    url = bill.get_attribute('href')
+    urls.append(url)
+
+acts = []
+
+for url in urls:
+    urlnew = str(url).replace("https://nyassembly.gov/leg/?", "https://nyassembly.gov/leg/?default_fld=&leg_video=&",
+                              1) + "&Text=Y"
+    driver.get(urlnew)
+    time.sleep(0.1)
+    WebDriverWait(driver, 300).until(EC.presence_of_element_located((By.CSS_SELECTOR, "#legcontent > pre")))
+    act = driver.find_element_by_css_selector('#legcontent > pre').text
+    actnew = re.sub("[\(\[].*?[\)\]]", "", act)
+    acts.append(actnew)
+
+datasource = pd.DataFrame({
+    'Full text': acts,
+    'Link to full text': urls
+})
+
+# save bill info into files
+datasource.to_excel('NY_Leginfo.xlsx')
+datasource.to_csv('NY_Leginfo.csv')
+datasource.to_pickle('NY_Leginfo.pkl')
+datasource.to_json('NY_Leginfo.json')
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mFileNotFoundError[0m                         Traceback (most recent call last)
+Input [0;32mIn [1][0m, in [0;36m<cell line: 25>[0;34m()[0m
+[1;32m     19[0m driver_path [38;5;241m=[39m [38;5;124m'[39m[38;5;124mI:[39m[38;5;124m\[39m[38;5;124mProjects[39m[38;5;124m\[39m[38;5;124mAFRI/chromedriver.exe[39m[38;5;124m'[39m  [38;5;66;03m#for windows[39;00m
+[1;32m     20[0m [38;5;66;03m# driver_path = '/Users/Yanxu/OneDrive/Projects/AgPolicyCoding/chromedriver'[39;00m
+[1;32m     21[0m [38;5;66;03m# driver = webdriver.Chrome(executable_path=DRIVER_PATH)[39;00m
+[1;32m     22[0m 
+[1;32m     23[0m [38;5;66;03m# Change the working directory[39;00m
+[1;32m     24[0m [38;5;66;03m#os.chdir('/Users/long/OneDrive/Projects/AFRI')[39;00m
+[0;32m---> 25[0m [43mos[49m[38;5;241;43m.[39;49m[43mchdir[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mI:[39;49m[38;5;124;43m\[39;49m[38;5;124;43mProjects/AFRI[39;49m[38;5;124;43m'[39;49m[43m)[49m
+[1;32m     26[0m [38;5;66;03m# os.chdir('/Volumes/GoogleDrive/Shared drives/UCSC-UMN AFRI project/Data/GA')[39;00m
+[1;32m     27[0m [38;5;66;03m# Get the current working directory[39;00m
+[1;32m     28[0m cwd [38;5;241m=[39m os[38;5;241m.[39mgetcwd()
+
+[0;31mFileNotFoundError[0m: [Errno 2] No such file or directory: 'I:\\Projects/AFRI'
+FileNotFoundError: [Errno 2] No such file or directory: 'I:\\Projects/AFRI'
+
