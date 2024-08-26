@@ -1,0 +1,193 @@
+Traceback (most recent call last):
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/asyncio/base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# import libraries
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
+from time import sleep
+import pandas as pd
+import datefinder
+import calendar
+import os
+import pytest
+import unittest
+from random import randint
+import PyPDF2
+import glob
+import requests
+from bs4 import BeautifulSoup
+
+# driver_path = 'C:/Program Files (x86)/Google/Chrome/Application/chromedriver.exe' #for windows
+# driver_path = '/Users/Yanxu/OneDrive/Projects/AgPolicyCoding/chromedriver'
+# driver = webdriver.Chrome(executable_path=DRIVER_PATH)
+
+# Change the working directory
+os.chdir('/Users/long/OneDrive/Projects/AFRI')
+# os.chdir('/Volumes/GoogleDrive/Shared drives/UCSC-UMN AFRI project/Data/GA')
+# Get the current working directory
+cwd = os.getcwd()
+# Print the current working directory
+print("Current working directory: {0}".format(cwd))
+
+# chromeOptions = webdriver.ChromeOptions()
+dnldpath = {"download.default_directory": "/Users/long/OneDrive/Projects/AFRI/data/NC/"}
+chromeOptions = webdriver.ChromeOptions()
+chromeOptions.add_experimental_option('prefs', {
+    "download.default_directory": dnldpath,  #Change default directory for downloads
+    "download.prompt_for_download": False,  #To auto download the file
+    "download.directory_upgrade": True,
+    "plugins.always_open_pdf_externally": True  #It will not show PDF directly in chrome
+})
+driver = webdriver.Chrome(executable_path='./chromedriver', options=chromeOptions)
+driver.get("https://www.ncleg.gov/Laws/SessionLaws/1959")
+
+yrs = []
+sts = []
+seyrs = []
+titles = []
+bfsums = []
+introdts = []
+sigdts = []
+effdts = []
+epddtes = []
+introducers = []
+txtlks = []
+acttxts = []
+stas = []
+hoscoms = []  # house committee
+sponsors = []
+sessions = []
+urls = []
+billnums = []
+
+yrs = ["1975", "1977", "1979", "1981", "1981e2", "1981e3", "1983", "1983e1", "1985", "1985e1", "1987", "1989", "1989e1",
+       "1989e2", "1991", "1993", "1993e1", "1995", "1995e1", "1995e2", "1997", "1999", "1999e1", "1999e2", "2001",
+       "2001e1", "2003", "2003e1", "2003e2", "2003e3", "2005", "2007", "2007E1", "2009", "2011", "2013", "2015",
+       "2015E1", "2015E2", "2015E3", "2015E4", "2017", "2017E1", "2017E2", "2017E3", "2019", "2021"]
+
+for yr in yrs:
+    sessionurl = "https://www.ncleg.gov/Laws/SessionLaws/" + yr
+    driver.get(sessionurl)
+    rows = driver.find_elements_by_css_selector('div.card-body.ncga-alt-rows #sessionSelect')
+
+    test = driver.find_elements_by_css_selector('div.card-body.ncga-alt-rows #sessionSelect.row.py-2 nth-child(1)')
+
+    test1 = driver.find_elements_by_css_selector('div.card-body.ncga-alt-rows #sessionSelect.row.py-2')
+
+    a = test1[1].text()
+
+    for cell in test[:2]:
+        a = cell.tag_name
+        get_attribute('href')
+
+    url = session.get_attribute('href')
+for cell in rows[:2]:
+
+    links = cell.find_elements_by_css_selector('div.card-body.ncga-alt-rows #sessionSelect a')
+    url = links[0].get_attribute('href')
+    html = requests.get(url)
+    soup = BeautifulSoup(html.content, "html.parser")
+    tag = soup.body
+    line = []
+    acttxt = []
+    for string in tag.strings:
+        line.append(string)
+        acttxt = "".join(line)
+    acttxts.append(acttxt)
+
+driver.get(url)
+
+urlloc = driver.find_element_by_css_selector('div.card-body.ncga-alt-rows")
+
+body > div.container - fluid.h - 100 > div > main > div: nth - child(7) > div.card - body.ncga - alt - rows
+
+url = get_attribute('href')
+
+location = driver.find_elements_by_css_selector('div.card-body.ncga-alt-rows #sessionSelect')
+
+#sessionSelect
+# sessionSelect
+
+# sessionSelect > div.col-8.col-md-3.col-lg-2.text-nowrap.mobile-font-size-large.d-flex > a:nth-child(1)
+
+get_attribute('href')
+
+sessions = driver.find_element_by_css_selector('a.chosen-single div b')
+sessions = driver.find_element_by_css_selector('a.chosen-single span')
+
+sessions = driver.find_element_by_css_selector(
+    '#sessionDropdown_chosen.chosen-container.chosen-container-single a.chosen-single div b')
+
+sessions.click()
+
+#sessionDropdown_chosen
+
+#sessionDropdown_chosen > a
+
+
+for session in sessions:
+    url = session.get_attribute('href')
+urls.append(url)
+
+for idx, url in enumerate(urls):
+    driver.get(url)
+
+path = "/Users/long/OneDrive/Projects/AFRI/data/NC/"
+files = glob.glob(os.path.join(path, '*.pdf'))
+
+acttxts = []
+
+for file in files:
+    with
+open(os.path.join(os.getcwd(), file), 'r') as f:  # open in readonly mode
+# creating a pdf File object of original pdf
+pdfFileObj = open(file, 'rb')
+pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+pagenumber = pdfReader.numPages
+acttxt = []
+pgtxts = []
+for p in range(pagenumber):
+    pageObj = pdfReader.getPage(p)
+pgtxt = pageObj.extractText()
+pgtxts.append(pgtxt)
+acttxt = '\n'.join(pgtxts)
+acttxts.append(acttxt)
+
+datasource = pd.DataFrame({
+    'Session Laws': acttxts
+})
+
+for idx, session in enumerate(acttxts):
+    datasource.to_csv('NC_Leginfo.tex')
+
+datasource.to_excel('NC_Leginfo.xlsx')
+datasource.to_csv('NC_Leginfo.csv')
+print("Web-scrapting finished")
+------------------
+
+[0;36m  Input [0;32mIn [1][0;36m[0m
+[0;31m    urlloc = driver.find_element_by_css_selector('div.card-body.ncga-alt-rows")[0m
+[0m                                                                               ^[0m
+[0;31mSyntaxError[0m[0;31m:[0m EOL while scanning string literal
+
+SyntaxError: EOL while scanning string literal (2429314568.py, line 100)
+

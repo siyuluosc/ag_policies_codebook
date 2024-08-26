@@ -1,0 +1,178 @@
+Traceback (most recent call last):
+  File "/Users/long/mambaforge/lib/python3.10/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/Users/long/mambaforge/lib/python3.10/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/long/mambaforge/lib/python3.10/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/Users/long/mambaforge/lib/python3.10/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/Users/long/mambaforge/lib/python3.10/asyncio/base_events.py", line 646, in run_until_complete
+    return future.result()
+  File "/Users/long/mambaforge/lib/python3.10/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/Users/long/mambaforge/lib/python3.10/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/long/mambaforge/lib/python3.10/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+sessions = ['2021 - 2022', '2019 - 2020', '2017 - 2018', '2015 - 2016', '2013 - 2014', '2011 - 2012', '2009 - 2010',
+            '2007 - 2008', '2005 - 2006', '2003 - 2004', '2001 - 2002', '1999 - 2000']
+
+urls = []
+measures = []
+subjects = []
+authors = []
+statuss = []
+subjects1 = []
+authors1 = []
+statuss1 = []
+# search bills by iterating sessionyears first and then keywords
+for session in sessions:
+    print(session)
+    driver.get("https://leginfo.legislature.ca.gov/faces/billSearchClient.xhtml")
+    WebDriverWait(driver, 300).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "#attrSearch"))
+    )
+    select_session = Select(driver.find_element_by_css_selector('select#session_year'))
+    select_session.select_by_visible_text(session)
+    search = driver.find_element_by_css_selector('#attrSearch')
+    search.click()
+
+    WebDriverWait(driver, 300).until(EC.presence_of_element_located((By.CSS_SELECTOR, "tbody tr")))
+    bills = driver.find_elements_by_css_selector('tbody tr')
+    for bill in bills:
+        if bill.find_element_by_css_selector("td:nth-child(4)").text == 'Chaptered':
+            url = bill.find_element_by_css_selector("td:nth-child(1) a").get_attribute('href')
+            urls.append(url)
+            measure = bill.find_element_by_css_selector("td:nth-child(1) a").text
+            measures.append(measure)
+            subject = bill.find_element_by_css_selector("td:nth-child(2)").text
+            subjects.append(subject)
+            author = bill.find_element_by_css_selector("td:nth-child(3)").text
+            authors.append(author)
+            status = bill.find_element_by_css_selector("td:nth-child(4)").text
+            statuss.append(status)
+        else:
+            print("Do not pass")
+        time.sleep(0.01)
+print("url done")
+
+# set up list titles
+years = []
+states = []
+sessionyears = []
+billnumbers = []
+titles = []
+briefsummarys = []
+introduceddates = []
+signingdates = []
+effectivedates = []
+expireddates = []
+leadauthors = []
+textlinks = []
+fulltexts = []
+fulltextpages = []
+
+# extract bill information on each bill
+
+for url in urls[6313:]:
+    driver.get(url)
+    state = "CA"
+    states.append(state)
+
+    billnumber = driver.find_element_by_css_selector('#bill_header > div:nth-child(3) > h1')
+    billnumbers.append(billnumber.text.rsplit(" ")[0])
+
+    title = driver.find_element_by_css_selector('#bill_header > div:nth-child(3) > h1')
+    title = title.text.split(" ", 1)[1]
+    titles.append((title.rsplit("(", 1)[0]))
+
+    textlinks.append(url)
+    fulltext = driver.find_element_by_css_selector("#bill_all").text
+    fulltexts.append(fulltext)
+    fulltextpage = driver.find_element_by_css_selector("#centercolumn").text
+    fulltextpages.append(fulltextpage)
+    sleeptime = randint(1, 11) * 0.1
+    time.sleep(sleeptime)
+
+datasource = pd.DataFrame({
+    'Year': years,
+    'State': states,
+    'Session Year': sessionyears,
+    'Bill Number': billnumbers,
+    'Name': titles,
+    'Brief Summary': briefsummarys,
+    'Introduced Date': introduceddates,
+    'Date it was signed': signingdates,
+    'Date effective': effectivedates,
+    'Expiration date': expireddates,
+    'Introducer': leadauthors,
+    'Full text': fulltexts,
+    'Link to full text': textlinks
+})
+
+datasource = pd.DataFrame({
+    'Year': years,
+    'State': states,
+    'Session Year': sessionyears,
+    'Bill Number': billnumbers,
+    'Name': titles,
+    'authors': authors,
+    'Brief Summary': briefsummarys,
+    'Introduced Date': introduceddates,
+    'Date effective': effectivedates,
+    'Expiration date': expireddates,
+    'Full text': fulltexts,
+    'Link to full text': textlinks
+})
+
+# Python program to read
+# json file
+
+
+# Opening JSON file
+
+os.chdir('/Volumes/GoogleDrive/Shared drives/UCSC-UMN AFRI project/Data/CA/')
+f = open('CA_Leginfo.json')
+# os.chdir('/Volumes/GoogleDrive/Shared drives/UCSC-UMN AFRI project/Data/GA')
+# Get the current working directory
+cwd = os.getcwd()
+# Print the current working directory
+print("Current working directory: {0}".format(cwd))
+
+#datasource = json.load(f)
+
+#datasource = pd.read_pickle("CA_Leginfo.pkl")
+#datasource = datasource.drop(['authors','Introduced Date','Date effective','Expiration date'], axis = 1)
+
+# save bill info into files
+datasource.to_excel('CA_Leginfo.xlsx')
+datasource.to_csv('CA_Leginfo.csv')
+from sqlalchemy import create_engine
+
+engine = create_engine('sqlite://', echo=False)
+datasource.to_sql('CA_Leginfo.sql', con=engine)
+datasource.to_pickle('CA_Leginfo.pkl')
+datasource.to_json('CA_Leginfo.json')
+
+datasource.to_stata('CA_Leginfo.dta')
+
+print("download finished")
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[1], line 15[0m
+[1;32m     13[0m [38;5;28;01mfor[39;00m session [38;5;129;01min[39;00m sessions:
+[1;32m     14[0m     [38;5;28mprint[39m(session)
+[0;32m---> 15[0m     [43mdriver[49m[38;5;241m.[39mget([38;5;124m"[39m[38;5;124mhttps://leginfo.legislature.ca.gov/faces/billSearchClient.xhtml[39m[38;5;124m"[39m)
+[1;32m     16[0m     WebDriverWait(driver, [38;5;241m300[39m)[38;5;241m.[39muntil(
+[1;32m     17[0m         EC[38;5;241m.[39mpresence_of_element_located((By[38;5;241m.[39mCSS_SELECTOR, [38;5;124m"[39m[38;5;124m#attrSearch[39m[38;5;124m"[39m))
+[1;32m     18[0m     )
+[1;32m     19[0m     select_session [38;5;241m=[39m Select(driver[38;5;241m.[39mfind_element_by_css_selector([38;5;124m'[39m[38;5;124mselect#session_year[39m[38;5;124m'[39m))
+
+[0;31mNameError[0m: name 'driver' is not defined
+NameError: name 'driver' is not defined
+
