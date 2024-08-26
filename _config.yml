@@ -1,8 +1,8 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: Codebook for Web-scraping of State Legislative Info
-author: UMN UCSC AFRI Project
+title: Codebook for State-Level Policies Affecting Agricultural Costs and Revenues in the US, 1975-2021: Data, Patterns, and Correlates
+author: Marc F. Bellemare, Galina Hale, Yanxu Long, and Siyu Luo
 logo: booklogo.png
 
 # Force re-execution of notebooks on each build.
