@@ -41,3 +41,4 @@ launch_buttons:
 # jupyter-book build codebook/ --builder pdflatex
 # jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/UCSC-UMN-AFRI-project/Codebook/
 # jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/UCSC-UMN-AFRI-project/Codebook/ --builder pdfhtml
+# jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/ag_policies_codebook --builder pdfhtml
