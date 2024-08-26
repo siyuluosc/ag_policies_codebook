@@ -3,7 +3,7 @@
 
 title: Codebook for Web-scraping of State Legislative Info
 author: UMN UCSC AFRI Project
-logo: booklogo.png
+logo: pics/booklogo.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
