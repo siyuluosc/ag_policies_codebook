@@ -7,7 +7,6 @@ a comprehensive database (1975-2021), patterns, and analysis of policy correlate
 
 ![](/pics/booklogo.png)
 
- <left>
+
 ```{tableofcontents}
 ```
- <left>
