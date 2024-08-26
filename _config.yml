@@ -42,3 +42,4 @@ launch_buttons:
 # jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/UCSC-UMN-AFRI-project/Codebook/
 # jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/UCSC-UMN-AFRI-project/Codebook/ --builder pdfhtml
 # jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/ag_policies_codebook
+# ghp-import -n -p -f _build/html
