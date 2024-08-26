@@ -1,14 +1,14 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: Codebook for State-Level Policies Affecting Agricultural Costs and Revenues in the US
-author: Marc F. Bellemare, Galina Hale, Yanxu Long, and Siyu Luo
+title: Codebook for Web-scraping of State Legislative Info
+author: UMN UCSC AFRI Project
 logo: booklogo.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
-  execute_notebooks: on
+  execute_notebooks: force
 
   #execute_notebooks: force
 
@@ -41,4 +41,3 @@ launch_buttons:
 # jupyter-book build codebook/ --builder pdflatex
 # jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/UCSC-UMN-AFRI-project/Codebook/
 # jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/UCSC-UMN-AFRI-project/Codebook/ --builder pdfhtml
-# jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/ag_policies_codebook --builder pdfhtml
