@@ -4,7 +4,6 @@
 format: jb-book
 root: ch1
 chapters:
-- file: ch1
 - file: ch2
 - file: ch3
 - file: ch4
