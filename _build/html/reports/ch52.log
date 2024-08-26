@@ -1,0 +1,161 @@
+Traceback (most recent call last):
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/asyncio/base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# import libraries
+import fitz
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver import Chrome, ChromeOptions
+from time import sleep
+import pandas as pd
+#import datefinder
+import calendar
+import os
+import unittest
+from random import randint
+#import PyPDF2
+import glob
+import pickle
+import time
+import pdfplumber
+
+#driver_path = r'C:/Users/longy/OneDrive/Projects/AFRI/windows/chromedriver.exe' #for windows
+driver_path = '/Users/long/OneDrive/Projects/AFRI/chromedriver'
+# driver = webdriver.Chrome(executable_path=DRIVER_PATH)
+
+# Change the working directory
+#os.chdir('/Users/long/OneDrive/Projects/AFRI')
+#os.chdir('C:/Users/longy/OneDrive/Projects/AFRI/data/KY') #for windows
+os.chdir('/Users/long/OneDrive/Projects/AFRI/data/KY')  #for windows
+# Get the current working directory
+cwd = os.getcwd()
+# Print the current working directory
+print("Current working directory: {0}".format(cwd))
+
+chromeOptions = webdriver.ChromeOptions()
+chromeOptions.add_experimental_option('prefs', {
+    #"download.default_directory": r"C:\Users\longy\OneDrive\Projects\AFRI\data\KY", #Change default directory for downloads
+    "download.default_directory": '/Users/long/OneDrive/Projects/AFRI/data/KY',  #Change default directory for downloads
+    "download.prompt_for_download": True,
+    "download.directory_upgrade": True,
+    "plugins.always_open_pdf_externally": True,  #It will not show PDF directly in chrome
+    "--enable-javascript": True})
+
+driver = webdriver.Chrome(executable_path=driver_path, options=chromeOptions)
+
+for session in range(0, 24):
+    print(session)
+    for act in range(1, 1001):
+        url = "https://apps.legislature.ky.gov/law/acts/" + str(session).zfill(2) + "RS/documents/" + str(act).zfill(
+            4) + ".pdf"
+        driver.get(url)
+        time.sleep(0.1)
+
+acttxts = []
+path = "/Users/long/Library/CloudStorage/OneDrive-Personal/Projects/AFRI/data/KY"
+files = glob.glob(os.path.join(path, '*.pdf'))
+for file in files:
+    try:
+        doc = fitz.open(file)
+        pgtxts = []
+        for page in doc:
+            pgtxt = page.get_text()
+            pgtxts.append(pgtxt)
+            acttxt = ' '.join(pgtxts)
+        acttxts.append(acttxt)
+        doc.close()
+    except:
+        print(file)
+
+datasource = pd.DataFrame({
+    'Full text': acttxts
+})
+
+datasource.to_excel('KY_Leginfo.xlsx')
+datasource.to_csv('KY_Leginfo.csv')
+datasource.to_pickle('KY_Leginfo.pkl')
+datasource.to_json('KY_Leginfo.json')
+print("done")
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mSessionNotCreatedException[0m                Traceback (most recent call last)
+Input [0;32mIn [1][0m, in [0;36m<cell line: 44>[0;34m()[0m
+[1;32m     35[0m chromeOptions [38;5;241m=[39m webdriver[38;5;241m.[39mChromeOptions()
+[1;32m     36[0m chromeOptions[38;5;241m.[39madd_experimental_option([38;5;124m'[39m[38;5;124mprefs[39m[38;5;124m'[39m, {
+[1;32m     37[0m     [38;5;66;03m#"download.default_directory": r"C:\Users\longy\OneDrive\Projects\AFRI\data\KY", #Change default directory for downloads[39;00m
+[1;32m     38[0m     [38;5;124m"[39m[38;5;124mdownload.default_directory[39m[38;5;124m"[39m: [38;5;124m'[39m[38;5;124m/Users/long/OneDrive/Projects/AFRI/data/KY[39m[38;5;124m'[39m,  [38;5;66;03m#Change default directory for downloads[39;00m
+[0;32m   (...)[0m
+[1;32m     41[0m     [38;5;124m"[39m[38;5;124mplugins.always_open_pdf_externally[39m[38;5;124m"[39m: [38;5;28;01mTrue[39;00m,  [38;5;66;03m#It will not show PDF directly in chrome[39;00m
+[1;32m     42[0m     [38;5;124m"[39m[38;5;124m--enable-javascript[39m[38;5;124m"[39m: [38;5;28;01mTrue[39;00m})
+[0;32m---> 44[0m driver [38;5;241m=[39m [43mwebdriver[49m[38;5;241;43m.[39;49m[43mChrome[49m[43m([49m[43mexecutable_path[49m[38;5;241;43m=[39;49m[43mdriver_path[49m[43m,[49m[43m [49m[43moptions[49m[38;5;241;43m=[39;49m[43mchromeOptions[49m[43m)[49m
+[1;32m     46[0m [38;5;28;01mfor[39;00m session [38;5;129;01min[39;00m [38;5;28mrange[39m([38;5;241m0[39m, [38;5;241m24[39m):
+[1;32m     47[0m     [38;5;28mprint[39m(session)
+
+File [0;32m~/opt/anaconda3/envs/py39/lib/python3.9/site-packages/selenium/webdriver/chrome/webdriver.py:76[0m, in [0;36mWebDriver.__init__[0;34m(self, executable_path, port, options, service_args, desired_capabilities, service_log_path, chrome_options, keep_alive)[0m
+[1;32m     73[0m [38;5;28mself[39m[38;5;241m.[39mservice[38;5;241m.[39mstart()
+[1;32m     75[0m [38;5;28;01mtry[39;00m:
+[0;32m---> 76[0m     [43mRemoteWebDriver[49m[38;5;241;43m.[39;49m[38;5;21;43m__init__[39;49m[43m([49m
+[1;32m     77[0m [43m        [49m[38;5;28;43mself[39;49m[43m,[49m
+[1;32m     78[0m [43m        [49m[43mcommand_executor[49m[38;5;241;43m=[39;49m[43mChromeRemoteConnection[49m[43m([49m
+[1;32m     79[0m [43m            [49m[43mremote_server_addr[49m[38;5;241;43m=[39;49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mservice[49m[38;5;241;43m.[39;49m[43mservice_url[49m[43m,[49m
+[1;32m     80[0m [43m            [49m[43mkeep_alive[49m[38;5;241;43m=[39;49m[43mkeep_alive[49m[43m)[49m[43m,[49m
+[1;32m     81[0m [43m        [49m[43mdesired_capabilities[49m[38;5;241;43m=[39;49m[43mdesired_capabilities[49m[43m)[49m
+[1;32m     82[0m [38;5;28;01mexcept[39;00m [38;5;167;01mException[39;00m:
+[1;32m     83[0m     [38;5;28mself[39m[38;5;241m.[39mquit()
+
+File [0;32m~/opt/anaconda3/envs/py39/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py:157[0m, in [0;36mWebDriver.__init__[0;34m(self, command_executor, desired_capabilities, browser_profile, proxy, keep_alive, file_detector, options)[0m
+[1;32m    154[0m [38;5;28;01mif[39;00m browser_profile [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[1;32m    155[0m     warnings[38;5;241m.[39mwarn([38;5;124m"[39m[38;5;124mPlease use FirefoxOptions to set browser profile[39m[38;5;124m"[39m,
+[1;32m    156[0m                   [38;5;167;01mDeprecationWarning[39;00m, stacklevel[38;5;241m=[39m[38;5;241m2[39m)
+[0;32m--> 157[0m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mstart_session[49m[43m([49m[43mcapabilities[49m[43m,[49m[43m [49m[43mbrowser_profile[49m[43m)[49m
+[1;32m    158[0m [38;5;28mself[39m[38;5;241m.[39m_switch_to [38;5;241m=[39m SwitchTo([38;5;28mself[39m)
+[1;32m    159[0m [38;5;28mself[39m[38;5;241m.[39m_mobile [38;5;241m=[39m Mobile([38;5;28mself[39m)
+
+File [0;32m~/opt/anaconda3/envs/py39/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py:252[0m, in [0;36mWebDriver.start_session[0;34m(self, capabilities, browser_profile)[0m
+[1;32m    249[0m w3c_caps [38;5;241m=[39m _make_w3c_caps(capabilities)
+[1;32m    250[0m parameters [38;5;241m=[39m {[38;5;124m"[39m[38;5;124mcapabilities[39m[38;5;124m"[39m: w3c_caps,
+[1;32m    251[0m               [38;5;124m"[39m[38;5;124mdesiredCapabilities[39m[38;5;124m"[39m: capabilities}
+[0;32m--> 252[0m response [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mexecute[49m[43m([49m[43mCommand[49m[38;5;241;43m.[39;49m[43mNEW_SESSION[49m[43m,[49m[43m [49m[43mparameters[49m[43m)[49m
+[1;32m    253[0m [38;5;28;01mif[39;00m [38;5;124m'[39m[38;5;124msessionId[39m[38;5;124m'[39m [38;5;129;01mnot[39;00m [38;5;129;01min[39;00m response:
+[1;32m    254[0m     response [38;5;241m=[39m response[[38;5;124m'[39m[38;5;124mvalue[39m[38;5;124m'[39m]
+
+File [0;32m~/opt/anaconda3/envs/py39/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py:321[0m, in [0;36mWebDriver.execute[0;34m(self, driver_command, params)[0m
+[1;32m    319[0m response [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mcommand_executor[38;5;241m.[39mexecute(driver_command, params)
+[1;32m    320[0m [38;5;28;01mif[39;00m response:
+[0;32m--> 321[0m     [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43merror_handler[49m[38;5;241;43m.[39;49m[43mcheck_response[49m[43m([49m[43mresponse[49m[43m)[49m
+[1;32m    322[0m     response[[38;5;124m'[39m[38;5;124mvalue[39m[38;5;124m'[39m] [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39m_unwrap_value(
+[1;32m    323[0m         response[38;5;241m.[39mget([38;5;124m'[39m[38;5;124mvalue[39m[38;5;124m'[39m, [38;5;28;01mNone[39;00m))
+[1;32m    324[0m     [38;5;28;01mreturn[39;00m response
+
+File [0;32m~/opt/anaconda3/envs/py39/lib/python3.9/site-packages/selenium/webdriver/remote/errorhandler.py:242[0m, in [0;36mErrorHandler.check_response[0;34m(self, response)[0m
+[1;32m    240[0m         alert_text [38;5;241m=[39m value[[38;5;124m'[39m[38;5;124malert[39m[38;5;124m'[39m][38;5;241m.[39mget([38;5;124m'[39m[38;5;124mtext[39m[38;5;124m'[39m)
+[1;32m    241[0m     [38;5;28;01mraise[39;00m exception_class(message, screen, stacktrace, alert_text)
+[0;32m--> 242[0m [38;5;28;01mraise[39;00m exception_class(message, screen, stacktrace)
+
+[0;31mSessionNotCreatedException[0m: Message: session not created: This version of ChromeDriver only supports Chrome version 105
+Current browser version is 108.0.5359.124 with binary path /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+SessionNotCreatedException: Message: session not created: This version of ChromeDriver only supports Chrome version 105
+Current browser version is 108.0.5359.124 with binary path /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+

@@ -1,0 +1,125 @@
+Traceback (most recent call last):
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/asyncio/base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/long/opt/anaconda3/envs/py39/lib/python3.9/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# import libraries
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
+from time import sleep
+import pandas as pd
+import datefinder
+import calendar
+import os
+import pytest
+import unittest
+from random import randint
+import PyPDF2
+import glob
+import requests
+from bs4 import BeautifulSoup
+
+# driver_path = 'C:/Program Files (x86)/Google/Chrome/Application/chromedriver.exe' #for windows
+# driver_path = '/Users/Yanxu/OneDrive/Projects/AgPolicyCoding/chromedriver'
+# driver = webdriver.Chrome(executable_path=DRIVER_PATH)
+
+# Change the working directory
+os.chdir('/Users/long/OneDrive/Projects/AFRI')
+# os.chdir('/Volumes/GoogleDrive/Shared drives/UCSC-UMN AFRI project/Data/GA')
+# Get the current working directory
+cwd = os.getcwd()
+# Print the current working directory
+print("Current working directory: {0}".format(cwd))
+
+chromeOptions = webdriver.ChromeOptions()
+dnldpath = {"download.default_directory": "/Users/long/OneDrive/Projects/AFRI/data/OR/"}
+chromeOptions.add_experimental_option("prefs", dnldpath)
+driver = webdriver.Chrome(executable_path='./chromedriver', options=chromeOptions)
+driver.get("https://www.oregonlegislature.gov/bills_laws/Pages/Oregon-Laws.aspx")
+
+urls = []
+acttxts = []
+
+sessionlist = driver.find_elements_by_css_selector('span.ms-commentexpand-iconouter')
+
+for session in sessionlist:
+    session.click()
+    sleep(1)
+
+chapters = driver.find_elements_by_css_selector('td.ms-cellstyle.ms-vb2 a')
+for chapter in chapters:
+    url = chapter.get_attribute('href')
+    urls.append(url)
+
+urlslist = list(set(urls))
+
+urlslist.sort()
+
+for idx, url in enumerate(urlslist):
+    driver.get(url)
+    sleep(1)
+    if '.pdf' in url:
+        path = "/Users/long/OneDrive/Projects/AFRI/data/OR/"
+        list_of_files = glob.glob(os.path.join(path, '*.pdf'))
+        latest_file = max(list_of_files, key=os.path.getctime)
+        print(latest_file)
+        with open(os.path.join(os.getcwd(), latest_file), 'r') as f:  # open in readonly mode
+            # creating a pdf File object of original pdf
+            pdfFileObj = open(latest_file, 'rb')
+            pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+            pagenumber = pdfReader.numPages
+            acttxt = []
+            pgtxts = []
+            for p in range(pagenumber):
+                pageObj = pdfReader.getPage(p)
+                pgtxt = pageObj.extractText()
+                pgtxts.append(pgtxt)
+                acttxt = '\n'.join(pgtxts)
+    else:
+        html = requests.get(url)
+        soup = BeautifulSoup(html.content, "html.parser")
+        tag = soup.body
+        acttxt = []
+        for string in tag.strings:
+            acttxt.append(string)
+    acttxts.append(acttxt)
+datasource = pd.DataFrame({
+    'Session Laws': acttxts,
+    'Link to full text': urls,
+})
+
+datasource.to_excel('OR_Leginfo.xlsx')
+datasource.to_csv('OR_Leginfo.csv')
+
+print("Web-scrapting finished")
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+Input [0;32mIn [1][0m, in [0;36m<cell line: 12>[0;34m()[0m
+[1;32m     10[0m [38;5;28;01mimport[39;00m [38;5;21;01mcalendar[39;00m
+[1;32m     11[0m [38;5;28;01mimport[39;00m [38;5;21;01mos[39;00m
+[0;32m---> 12[0m [38;5;28;01mimport[39;00m [38;5;21;01mpytest[39;00m
+[1;32m     13[0m [38;5;28;01mimport[39;00m [38;5;21;01munittest[39;00m
+[1;32m     14[0m [38;5;28;01mfrom[39;00m [38;5;21;01mrandom[39;00m [38;5;28;01mimport[39;00m randint
+
+[0;31mModuleNotFoundError[0m: No module named 'pytest'
+ModuleNotFoundError: No module named 'pytest'
+
