@@ -36,8 +36,9 @@ html:
 launch_buttons:
   colab_url: "https://colab.research.google.com"
 
-# jupyter-book build Codebook/
+# jupyter-book build codebook/
 # jupyter-book build Codebook/ --builder pdfhtml
 # jupyter-book build codebook/ --builder pdflatex
 # jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/UCSC-UMN-AFRI-project/Codebook/
 # jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/UCSC-UMN-AFRI-project/Codebook/ --builder pdfhtml
+# jupyter-book build /Users/long/Library/CloudStorage/OneDrive-Personal/Projects/ag_policies_codebook

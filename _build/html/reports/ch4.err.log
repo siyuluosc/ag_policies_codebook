@@ -1,44 +1,134 @@
 Traceback (most recent call last):
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/nbclient/client.py", line 782, in _async_poll_for_reply
-    msg = await ensure_async(self.kc.shell_channel.get_msg(timeout=new_timeout))
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 198, in ensure_async
-    result = await obj
-             ^^^^^^^^^
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/jupyter_client/channels.py", line 315, in get_msg
-    raise Empty
-_queue.Empty
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+  File "/Users/long/Library/CloudStorage/OneDrive-Personal/Projects/Crop_Variaties/.venv/ag_policies_codebook/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
     executenb(
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/nbclient/client.py", line 1314, in execute
+  File "/Users/long/Library/CloudStorage/OneDrive-Personal/Projects/Crop_Variaties/.venv/ag_policies_codebook/lib/python3.12/site-packages/nbclient/client.py", line 1314, in execute
     return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+  File "/Users/long/Library/CloudStorage/OneDrive-Personal/Projects/Crop_Variaties/.venv/ag_policies_codebook/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
     return loop.run_until_complete(inner)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/asyncio/base_events.py", line 653, in run_until_complete
+  File "/Users/long/miniforge3/envs/codebook_env/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
     return future.result()
            ^^^^^^^^^^^^^^^
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/nbclient/client.py", line 709, in async_execute
+  File "/Users/long/Library/CloudStorage/OneDrive-Personal/Projects/Crop_Variaties/.venv/ag_policies_codebook/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
     await self.async_execute_cell(
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/nbclient/client.py", line 1005, in async_execute_cell
-    exec_reply = await self.task_poll_for_reply
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/nbclient/client.py", line 806, in _async_poll_for_reply
-    error_on_timeout_execute_reply = await self._async_handle_timeout(timeout, cell)
-                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/long/miniforge3/envs/gtm_py11/lib/python3.11/site-packages/nbclient/client.py", line 856, in _async_handle_timeout
-    raise CellTimeoutError.error_from_timeout_and_cell(
-nbclient.exceptions.CellTimeoutError: A cell timed out while it was being executed, after 30 seconds.
-The message was: Cell execution timed out.
-Here is a preview of the cell contents:
--------------------
-['#####################################################################################', '##############################   select gtm_py11 env   ##############################', '#####################################################################################', '#import libraries', '# Check the Python version']
-...
-["folder_path_ssd = '/Volumes/SSD/AFRI/Data/Meachine Learning/gtm'", 'new_file_path_ssd = os.path.join(folder_path_ssd, new_file_name)', '# Read the CSV file (if needed)', 'topics_dict.to_csv(new_file_path_ssd)', 'print(f"File \'{latest_csv_file}\' has been renamed to \'{new_file_path_ssd}\'")']
--------------------
+  File "/Users/long/Library/CloudStorage/OneDrive-Personal/Projects/Crop_Variaties/.venv/ag_policies_codebook/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/long/Library/CloudStorage/OneDrive-Personal/Projects/Crop_Variaties/.venv/ag_policies_codebook/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+#####################################################################################
+##############################   select gtm_py11 env   ##############################
+#####################################################################################
+#import libraries
+# Check the Python version
+import sys
+
+sys.version
+import os
+import pandas as pd
+
+working_directory = '../Guided-Topic-Modeling'
+working_directory = '/Users/long/Library/CloudStorage/OneDrive-Personal/Projects/Guided-Topic-Modeling'
+print(os.path.abspath(working_directory))
+sys.path.append(working_directory)
+print(sys.path)
+import glob
+from bertopic import BERTopic
+#from sklearn.datasets import fetch_20newsgroups
+import gensim
+import gensim.corpora as corpora
+import pickle
+import matplotlib.pyplot as plt
+import nltk
+from nltk import bigrams
+from nltk.tokenize import word_tokenize
+import re
+import openpyxl
+import numpy as np
+
+nltk.download('punkt')
+
+# set up working directory
+# Change the working directory
+os.chdir(working_directory)
+# Get the current working directory
+cwd = os.getcwd()
+# Print the current working directory
+print("Current working directory: {0}".format(cwd))
+
+sys.argv = [
+    'gtm.py',
+    '--ps1', 'agriculture',
+    '--ps2', 'farm',
+    '--pw1', '1.0',
+    '--pw2', '0.000000000000000000000000001',
+    '--size', '1000',
+    '--gravity', '0.1'
+    # Add '--ns1', '--ns2', '--nw1', '--nw2' and their values if needed
+]
+
+exec(open("gtm.py").read())
+
+sys.argv = [
+    'gtm.py',
+    '--ps1', 'agriculture',
+    '--ps2', 'farm',
+    '--pw1', '1.0',
+    '--pw2', '0.000000000000000000000000001',
+    '--size', '2000',
+    '--gravity', '0.1'
+    # Add '--ns1', '--ns2', '--nw1', '--nw2' and their values if needed
+]
+
+exec(open("gtm.py").read())
+
+# Extracting values from sys.argv
+ps1_index = sys.argv.index('--ps1') + 1
+size_index = sys.argv.index('--size') + 1
+gravity_index = sys.argv.index('--gravity') + 1
+
+ps1_value = sys.argv[ps1_index]
+size_value = sys.argv[size_index]
+gravity_value = sys.argv[gravity_index]
+
+# Specify the folder path
+folder_path = 'output'  # Replace with the actual folder path
+print(os.path.abspath(folder_path))
+
+# Find the last CSV file
+csv_files = glob.glob(os.path.join(folder_path, '*.csv'))
+latest_csv_file = max(csv_files, key=os.path.getmtime)
+
+# Construct new file name
+new_file_name = f"{ps1_value}_{size_value}_{gravity_value}.csv"
+new_file_path = os.path.join(folder_path, new_file_name)
+
+# Rename the file
+os.rename(latest_csv_file, new_file_path)
+print(f"File '{latest_csv_file}' has been renamed to '{new_file_path}'")
+
+# Read the CSV file (if needed)
+topics_dict = pd.read_csv(new_file_path)
+topics_dict.rename(columns={'Unnamed: 0': 'keyword'}, inplace=True)
+
+folder_path_ssd = '/Volumes/SSD/AFRI/Data/Meachine Learning/gtm'
+new_file_path_ssd = os.path.join(folder_path_ssd, new_file_name)
+# Read the CSV file (if needed)
+topics_dict.to_csv(new_file_path_ssd)
+print(f"File '{latest_csv_file}' has been renamed to '{new_file_path_ssd}'")
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+Cell [0;32mIn[1], line 10[0m
+[1;32m      8[0m sys[38;5;241m.[39mversion
+[1;32m      9[0m [38;5;28;01mimport[39;00m [38;5;21;01mos[39;00m
+[0;32m---> 10[0m [38;5;28;01mimport[39;00m [38;5;21;01mpandas[39;00m [38;5;28;01mas[39;00m [38;5;21;01mpd[39;00m
+[1;32m     12[0m working_directory [38;5;241m=[39m [38;5;124m'[39m[38;5;124m../Guided-Topic-Modeling[39m[38;5;124m'[39m
+[1;32m     13[0m working_directory [38;5;241m=[39m [38;5;124m'[39m[38;5;124m/Users/long/Library/CloudStorage/OneDrive-Personal/Projects/Guided-Topic-Modeling[39m[38;5;124m'[39m
+
+[0;31mModuleNotFoundError[0m: No module named 'pandas'
 
